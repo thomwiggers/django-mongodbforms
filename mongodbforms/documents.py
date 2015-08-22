@@ -8,7 +8,7 @@ from django.forms.forms import (BaseForm, DeclarativeFieldsMetaclass,
 from django.forms.widgets import media_property
 from django.core.exceptions import FieldError
 from django.core.validators import EMPTY_VALUES
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.utils.text import capfirst, get_valid_filename
