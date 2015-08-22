@@ -34,14 +34,14 @@ BLANK_CHOICE_DASH = [("", "---------")]
 
 class MongoFormFieldGenerator(object):
     """This class generates Django form-fields for mongoengine-fields."""
-    
+
     # used for fields that fit in one of the generate functions
     # but don't actually have the name.
     generator_map = {
         'sortedlistfield': 'generate_listfield',
         'longfield': 'generate_intfield',
     }
-    
+
     form_field_map = {
         'stringfield': MongoCharField,
         'stringfield_choices': forms.TypedChoiceField,
@@ -63,12 +63,12 @@ class MongoFormFieldGenerator(object):
         'filefield': forms.FileField,
         'imagefield': forms.ImageField,
     }
-    
+
     # uses the same keys as form_field_map
     widget_override_map = {
         'stringfield_long': forms.Textarea,
     }
-    
+
     def __init__(self, field_overrides={}, widget_overrides={}):
         self.form_field_map.update(field_overrides)
         self.widget_override_map.update(widget_overrides)
@@ -83,14 +83,14 @@ class MongoFormFieldGenerator(object):
         # to handle then a simple field
         if isinstance(field, MongoEmbeddedDocumentField):
             return
-        
+
         attr_name = 'generate_%s' % field.__class__.__name__.lower()
         if hasattr(self, attr_name):
             return getattr(self, attr_name)(field, **kwargs)
 
         for cls in field.__class__.__bases__:
             cls_name = cls.__name__.lower()
-            
+
             attr_name = 'generate_%s' % cls_name
             if hasattr(self, attr_name):
                 return getattr(self, attr_name)(field, **kwargs)
@@ -98,7 +98,7 @@ class MongoFormFieldGenerator(object):
             if cls_name in self.form_field_map:
                 attr = self.generator_map.get(cls_name)
                 return getattr(self, attr)(field, **kwargs)
-                
+
         raise NotImplementedError('%s is not supported by MongoForm' %
                                   field.__class__.__name__)
 
@@ -134,7 +134,7 @@ class MongoFormFieldGenerator(object):
             return field.help_text
         else:
             return ''
-            
+
     def get_field_default(self, field):
         if isinstance(field, (MongoListField, MongoMapField)):
             f = field.field
@@ -148,7 +148,7 @@ class MongoFormFieldGenerator(object):
         else:
             d['initial'] = field.default
         return f.default
-        
+
     def check_widget(self, map_key):
         if map_key in self.widget_override_map:
             return {'widget': self.widget_override_map.get(map_key)}
@@ -181,7 +181,7 @@ class MongoFormFieldGenerator(object):
             })
             if field.regex:
                 defaults['validators'] = [RegexValidator(regex=field.regex)]
-            
+
         form_class = self.form_field_map.get(map_key)
         defaults.update(self.check_widget(map_key))
         defaults.update(kwargs)
@@ -324,7 +324,7 @@ class MongoFormFieldGenerator(object):
         # So we just ignore them
         if isinstance(field.field, MongoEmbeddedDocumentField):
             return
-        
+
         defaults = {
             'label': self.get_field_label(field),
             'help_text': self.get_field_help_text(field),
@@ -351,13 +351,13 @@ class MongoFormFieldGenerator(object):
         defaults.update(self.check_widget(map_key))
         defaults.update(kwargs)
         return form_class(**defaults)
-        
+
     def generate_mapfield(self, field, **kwargs):
         # We can't really handle embedded documents here.
         # So we just ignore them
         if isinstance(field.field, MongoEmbeddedDocumentField):
             return
-            
+
         map_key = 'mapfield'
         form_field = self.generate(field.field)
         defaults = {
@@ -433,10 +433,10 @@ class Html5FormFieldGenerator(MongoDefaultFormFieldGenerator):
         override = super(Html5FormFieldGenerator, self).check_widget(map_key)
         if override != {}:
             return override
-        
+
         chunks = map_key.split('field')
         kind = chunks[0]
-        
+
         if kind == 'email':
             if hasattr(forms, 'EmailInput'):
                 return {'widget': forms.EmailInput}
