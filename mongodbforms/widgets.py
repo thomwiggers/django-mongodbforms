@@ -5,7 +5,7 @@ from django.forms.widgets import (Widget, Media, TextInput,
                                   MultiWidget, HiddenInput)
 from django.utils.safestring import mark_safe
 from django.core.validators import EMPTY_VALUES
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 
 
 class Html5SplitDateTimeWidget(SplitDateTimeWidget):
