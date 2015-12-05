@@ -41,16 +41,16 @@ def format_mongo_validation_errors(validation_exception):
             value = ' '.join([generate_key(k) for k in value])
         if isinstance(value, dict):
             value = ' '.join([
-                generate_key(v, k) for k, v in value.iteritems()
+                generate_key(v, k) for k, v in value.items()
             ])
 
         results = "%s.%s" % (prefix, value) if prefix else value
         return results
 
     error_dict = defaultdict(list)
-    for k, v in validation_exception.to_dict().iteritems():
+    for k, v in validation_exception.to_dict().items():
         error_dict[generate_key(v)].append(k)
-    return ["%s: %s" % (k, v) for k, v in error_dict.iteritems()]
+    return ["%s: %s" % (k, v) for k, v in error_dict.items()]
 
 
 # Taken from six (https://pypi.python.org/pypi/six)

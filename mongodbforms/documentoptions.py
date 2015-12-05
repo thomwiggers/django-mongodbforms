@@ -1,6 +1,7 @@
 import sys
 from collections import MutableMapping
 from types import MethodType
+import warnings
 
 from django.db.models.fields import FieldDoesNotExist
 from django.utils.functional import LazyObject, new_method_proxy
@@ -375,4 +376,8 @@ class DocumentMetaWrapper(MutableMapping):
         return []
 
     def iteritems(self):
+        warnings.warn("Use items() instead", DeprecationWarning)
+        return self.items()
+
+    def items(self):
         return iter(self._meta.items())
