@@ -3,7 +3,7 @@ from django.conf import settings
 
 import mongoengine
 from django.test import SimpleTestCase
-from .documentoptions import LazyDocumentMetaWrapper
+from mongodbforms.documentoptions import LazyDocumentMetaWrapper
 
 
 settings.configure(

@@ -18,7 +18,7 @@ setup(
     description="An implementation of django forms using mongoengine.",
     author='Thom Wiggers',
     author_email='thom@thomwiggers.nl',
-    packages=['mongodbforms'],
+    packages=['mongodbforms', 'tests'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
@@ -33,4 +33,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['setuptools', 'django>=1.9', 'mongoengine>=0.10.0'],
+    test_suite="tests",
 )
