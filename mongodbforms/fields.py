@@ -5,6 +5,7 @@ Based on django mongotools (https://github.com/wpjunior/django-mongotools) by
 Wilson Júnior (wilsonpjunior@gmail.com).
 """
 import copy
+import warnings
 
 from django import forms
 from django.core.validators import (EMPTY_VALUES, MinLengthValidator,
@@ -245,12 +246,16 @@ class ListField(forms.Field):
         self.run_validators(clean_data)
         return clean_data
 
-    def _has_changed(self, initial, data):
+    def _has_changed(self, *args):
+        warnings.warn("Use has_changed instead", DeprecationWarning)
+        return self.has_changed(*args)
+
+    def has_changed(self, initial, data):
         if initial is None:
             initial = ['' for x in range(0, len(data))]
 
         for initial, data in zip(initial, data):
-            if self.contained_field._has_changed(initial, data):
+            if self.contained_field.has_changed(initial, data):
                 return True
         return False
 
@@ -372,7 +377,11 @@ class MapField(forms.Field):
         self.run_validators(clean_data)
         return clean_data
 
-    def _has_changed(self, initial, data):
+    def _has_changed(self, *args):
+        warnings.warn("Use has_changed instead", DeprecationWarning)
+        return self.has_changed(*args)
+
+    def has_changed(self, initial, data):
         for k, v in data.items():
             if initial is None:
                 init_val = ''
@@ -381,6 +390,6 @@ class MapField(forms.Field):
                     init_val = initial[k]
                 except KeyError:
                     return True
-            if self.contained_field._has_changed(init_val, v):
+            if self.contained_field.has_changed(init_val, v):
                 return True
         return False
