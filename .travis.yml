@@ -14,7 +14,7 @@ matrix:
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install flake8 coveralls coverage --use-mirrors
+  - pip install flake8 coveralls coverage
 
 before_script:
   - touch README.txt
