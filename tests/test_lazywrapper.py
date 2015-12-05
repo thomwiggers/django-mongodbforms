@@ -4,6 +4,7 @@ from unittest import TestCase
 import mongoengine
 from mongodbforms.documentoptions import LazyDocumentMetaWrapper
 
+
 class TestDocument(mongoengine.Document):
     meta = {'abstract': True}
 
