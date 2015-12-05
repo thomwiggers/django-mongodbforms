@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 
+import mongoengine
+from django.test import SimpleTestCase
+from .documentoptions import LazyDocumentMetaWrapper
+
+
 settings.configure(
     DEBUG=True,
     DATABASES={
@@ -17,11 +22,6 @@ settings.configure(
         'mongodbforms',
     )
 )
-
-
-import mongoengine
-from django.test import SimpleTestCase
-from mongodbforms.documentoptions import LazyDocumentMetaWrapper
 
 
 class TestDocument(mongoengine.Document):

@@ -8,26 +8,18 @@ import collections
 
 from django import forms
 from django.core.validators import EMPTY_VALUES, RegexValidator
-try:
-    from django.utils.encoding import smart_text as smart_unicode
-except ImportError:
-    try:
-        from django.utils.encoding import smart_unicode
-    except ImportError:
-        from django.forms.util import smart_unicode
+from django.utils.encoding import smart_text as smart_unicode
 from django.utils.text import capfirst
-
 from mongoengine import (ReferenceField as MongoReferenceField,
                          EmbeddedDocumentField as MongoEmbeddedDocumentField,
                          ListField as MongoListField,
                          MapField as MongoMapField)
-
-from mongodbforms.fields import (MongoCharField, MongoEmailField,
-                                 MongoURLField, ReferenceField,
-                                 DocumentMultipleChoiceField, ListField,
-                                 MapField)
-from mongodbforms.widgets import Html5SplitDateTimeWidget
-from mongodbforms.documentoptions import create_verbose_name
+from .fields import (MongoCharField, MongoEmailField,
+                     MongoURLField, ReferenceField,
+                     DocumentMultipleChoiceField, ListField,
+                     MapField)
+from .widgets import Html5SplitDateTimeWidget
+from .documentoptions import create_verbose_name
 
 BLANK_CHOICE_DASH = [("", "---------")]
 

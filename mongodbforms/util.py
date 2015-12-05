@@ -1,46 +1,10 @@
 from collections import defaultdict
 
 from django.conf import settings
+from django.utils.module_loading import import_string as import_by_path
 
-from mongodbforms.documentoptions import DocumentMetaWrapper, LazyDocumentMetaWrapper
-from mongodbforms.fieldgenerator import MongoDefaultFormFieldGenerator
-
-try:
-    from django.utils.module_loading import import_by_path
-except ImportError:
-    # this is only in Django's devel version for now
-    # and the following code comes from there. Yet it's too nice to
-    # pass on this. So we do define it here for now.
-    import sys
-    from django.core.exceptions import ImproperlyConfigured
-    from importlib import import_module
-    from django.utils import six
-
-    def import_by_path(dotted_path, error_prefix=''):
-        """
-        Import a dotted module path and return the attribute/class designated
-        by the last name in the path. Raise ImproperlyConfigured if something
-        goes wrong.
-        """
-        try:
-            module_path, class_name = dotted_path.rsplit('.', 1)
-        except ValueError:
-            raise ImproperlyConfigured("%s%s doesn't look like a module path" %
-                                       (error_prefix, dotted_path))
-        try:
-            module = import_module(module_path)
-        except ImportError as e:
-            msg = '%sError importing module %s: "%s"' % (
-                error_prefix, module_path, e)
-            six.reraise(ImproperlyConfigured, ImproperlyConfigured(msg),
-                        sys.exc_info()[2])
-        try:
-            attr = getattr(module, class_name)
-        except AttributeError:
-            raise ImproperlyConfigured(
-                '%sModule "%s" does not define a "%s" attribute/class' %
-                (error_prefix, module_path, class_name))
-        return attr
+from .documentoptions import DocumentMetaWrapper, LazyDocumentMetaWrapper
+from .fieldgenerator import MongoDefaultFormFieldGenerator
 
 
 def load_field_generator():
@@ -50,12 +14,18 @@ def load_field_generator():
 
 
 def init_document_options(document):
-    if not isinstance(document._meta, (DocumentMetaWrapper, LazyDocumentMetaWrapper)):
+    if not isinstance(document._meta,
+                      (DocumentMetaWrapper, LazyDocumentMetaWrapper)):
         document._meta = DocumentMetaWrapper(document)
     # Workaround for Django 1.7+
     document._deferred = False
-    # FIXME: Wrong implementation for Relations (https://github.com/django/django/blob/master/django/db/models/base.py#L601)
-    document.serializable_value = lambda self, field_name: self._meta.get_field(field_name)
+
+    def serializable_value(self, field_name):
+        # FIXME: Wrong implementation for Relations
+        # (https://github.com/django/django/blob/master/django/db/models/base.py#L601)
+        return self._meta.get_field(field_name)
+    document.serializable_value = serializable_value
+
     return document
 
 

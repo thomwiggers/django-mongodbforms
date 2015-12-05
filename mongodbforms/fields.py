@@ -10,29 +10,15 @@ from django import forms
 from django.core.validators import (EMPTY_VALUES, MinLengthValidator,
                                     MaxLengthValidator)
 
-try:
-    from django.utils.encoding import force_text as force_unicode
-except ImportError:
-    from django.utils.encoding import force_unicode
-
-try:
-    from django.utils.encoding import smart_text as smart_unicode
-except ImportError:
-    try:
-        from django.utils.encoding import smart_unicode
-    except ImportError:
-        from django.forms.util import smart_unicode
-
+from django.utils.encoding import (force_text as force_unicode,
+                                   smart_text as smart_unicode)
 from django.utils.translation import ugettext_lazy as _
 from django.forms.utils import ErrorList
 from django.core.exceptions import ValidationError
 
-try:  # objectid was moved into bson in pymongo 1.9
-    from bson.errors import InvalidId
-except ImportError:
-    from pymongo.errors import InvalidId
+from bson.errors import InvalidId
 
-from mongodbforms.widgets import ListWidget, MapWidget, HiddenMapWidget
+from .widgets import ListWidget, MapWidget, HiddenMapWidget
 
 
 class MongoChoiceIterator(object):

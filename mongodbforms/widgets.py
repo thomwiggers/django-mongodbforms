@@ -119,7 +119,8 @@ class MapWidget(BaseContainerWidget):
                 )
             group = []
             if not self.is_hidden:
-                group.append(mark_safe('<fieldset %s>' % flatatt(fieldset_attr)))
+                group.append(
+                    mark_safe('<fieldset %s>' % flatatt(fieldset_attr)))
 
             if id_:
                 final_attrs = dict(final_attrs, id='%s_key_%s' % (id_, i))

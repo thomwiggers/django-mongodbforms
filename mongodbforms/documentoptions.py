@@ -3,14 +3,8 @@ from collections import MutableMapping
 from types import MethodType
 
 from django.db.models.fields import FieldDoesNotExist
-from django.utils.text import capfirst
 from django.utils.functional import LazyObject, new_method_proxy
-try:
-    # New in Django 1.7+
-    from django.utils.text import camel_case_to_spaces
-except ImportError:
-    # Backwards compatibility
-    from django.db.models.options import get_verbose_name as camel_case_to_spaces
+from django.utils.text import capfirst, camel_case_to_spaces
 from django.conf import settings
 from mongoengine.fields import ReferenceField, ListField
 
@@ -39,7 +33,8 @@ class Relation(object):
 
     @property
     def to(self):
-        if not isinstance(self._to._meta, (DocumentMetaWrapper, LazyDocumentMetaWrapper)):
+        if not isinstance(self._to._meta,
+                          (DocumentMetaWrapper, LazyDocumentMetaWrapper)):
             self._to._meta = DocumentMetaWrapper(self._to)
         return self._to
 
@@ -92,6 +87,7 @@ class LazyDocumentMetaWrapper(LazyObject):
 
 
 class DocumentMetaWrapper(MutableMapping):
+
     """
     Used to store mongoengine's _meta dict to make the document admin
     as compatible as possible to django's meta class on models.
@@ -157,7 +153,8 @@ class DocumentMetaWrapper(MutableMapping):
                     # FIXME: Probably broken in Django 1.7
                     f.rel = Relation(f.document_type)
                     f.is_relation = True
-                elif isinstance(f, ListField) and isinstance(f.field, ReferenceField):
+                elif (isinstance(f, ListField) and
+                      isinstance(f.field, ReferenceField)):
                     # FIXME: Probably broken in Django 1.7
                     f.field.rel = Relation(f.field.document_type)
                     f.field.is_relation = True
@@ -182,10 +179,13 @@ class DocumentMetaWrapper(MutableMapping):
                         else:
                             flat.append((choice, value))
                 f.flatchoices = flat
-            if isinstance(f, ReferenceField) and not \
-                    isinstance(f.document_type._meta, (DocumentMetaWrapper, LazyDocumentMetaWrapper)) and \
-                    self.document != f.document_type:
-                f.document_type._meta = LazyDocumentMetaWrapper(f.document_type)
+            if (isinstance(f, ReferenceField) and not
+                    isinstance(f.document_type._meta,
+                               (DocumentMetaWrapper,
+                                LazyDocumentMetaWrapper)) and
+                    self.document != f.document_type):
+                f.document_type._meta = LazyDocumentMetaWrapper(
+                    f.document_type)
             if not hasattr(f, 'auto_created'):
                 f.auto_created = False
 
@@ -205,7 +205,9 @@ class DocumentMetaWrapper(MutableMapping):
 
         def _get_pk_val(obj):
             return obj.pk
-        patch_document(_get_pk_val, self.document, False)  # document is a class...
+
+        # document is a class
+        patch_document(_get_pk_val, self.document, False)
 
         if pk_field is not None:
             self.pk.name = self.pk_name
@@ -214,7 +216,8 @@ class DocumentMetaWrapper(MutableMapping):
             self.pk.fake = True
             # this is used in the admin and used to determine if the admin
             # needs to add a hidden pk field. It does not for embedded fields.
-            # So we pretend to have an editable pk field and just ignore it otherwise
+            # So we pretend to have an editable pk field and just ignore it
+            # otherwise
             self.pk.editable = True
 
     @property

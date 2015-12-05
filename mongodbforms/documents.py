@@ -15,19 +15,17 @@ from django.utils.text import capfirst, get_valid_filename
 
 from mongoengine.fields import (ObjectIdField, ListField, ReferenceField,
                                 FileField, MapField, EmbeddedDocumentField)
-try:
-    from mongoengine.base import ValidationError
-except ImportError:
-    from mongoengine.errors import ValidationError
+from mongoengine.base import (ValidationError,
+                              NON_FIELD_ERRORS as MONGO_NON_FIELD_ERRORS)
 from mongoengine.queryset import OperationError, Q
 from mongoengine.queryset.base import BaseQuerySet
 from mongoengine.connection import get_db, DEFAULT_CONNECTION_NAME
-from mongoengine.base import NON_FIELD_ERRORS as MONGO_NON_FIELD_ERRORS
 
 from gridfs import GridFS
 
-from mongodbforms.documentoptions import DocumentMetaWrapper
-from mongodbforms.util import with_metaclass, load_field_generator
+from .documentoptions import DocumentMetaWrapper
+from .util import with_metaclass, load_field_generator
+
 
 _fieldgenerator = load_field_generator()
 
@@ -254,7 +252,7 @@ def fields_for_document(document, fields=None, exclude=None, widgets=None,
     field_dict = OrderedDict(field_list)
     if fields:
         field_dict = OrderedDict(
-            [(f, field_dict.get(f)) for f in fields
+            [(fi, field_dict.get(fi)) for fi in fields
                 if ((not exclude) or (exclude and f not in exclude))]
         )
 
@@ -850,7 +848,8 @@ class EmbeddedDocumentFormSet(BaseDocumentFormSet):
             if parent_document is None:
                 self.parent_document = instance
 
-        queryset = getattr(self.parent_document, self.form._meta.embedded_field)
+        queryset = getattr(self.parent_document,
+                           self.form._meta.embedded_field)
         if not isinstance(queryset, list) and queryset is None:
             queryset = []
         elif not isinstance(queryset, list):
@@ -928,7 +927,8 @@ def _get_embedded_field(parent_doc, document, emb_name=None, can_fail=False):
                     isinstance(field.field, EmbeddedDocumentField) and
                     field.field.document_type != document):
                 raise Exception(
-                    "emb_name '%s' is not a EmbeddedDocumentField or not a ListField to %s" % (
+                    "emb_name '%s' is not a EmbeddedDocumentField or not a "
+                    "ListField to %s" % (
                         emb_name, document
                     )
                 )
@@ -950,10 +950,12 @@ def _get_embedded_field(parent_doc, document, emb_name=None, can_fail=False):
             if can_fail:
                 return
             raise Exception(
-                "%s has no EmbeddedDocumentField or ListField to %s" % (parent_doc, document))
+                "%s has no EmbeddedDocumentField or ListField to %s"
+                % (parent_doc, document))
         else:
             raise Exception(
-                "%s has more than 1 EmbeddedDocumentField to %s" % (parent_doc, document))
+                "%s has more than 1 EmbeddedDocumentField to %s"
+                % (parent_doc, document))
 
     return field
 
@@ -971,7 +973,9 @@ def embeddedformset_factory(document, parent_document,
     You must provide ``fk_name`` if ``model`` has more than one ``ForeignKey``
     to ``parent_model``.
     """
-    emb_field = _get_embedded_field(parent_document, document, emb_name=embedded_name)
+    emb_field = _get_embedded_field(parent_document,
+                                    document,
+                                    emb_name=embedded_name)
     if isinstance(emb_field, EmbeddedDocumentField):
         max_num = 1
     kwargs = {
