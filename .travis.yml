@@ -10,7 +10,7 @@ python:
   - "nightly"
 matrix:
   allow_failures:
-    - python: "nightly"
+    - python: "3.3,3.4,3.5,nightly"
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
