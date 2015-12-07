@@ -122,7 +122,7 @@ class MongoFormFieldGenerator(object):
         return ''
 
     def get_field_help_text(self, field):
-        if field.help_text:
+        if hasattr(field, 'help_text'):
             return field.help_text
         else:
             return ''
