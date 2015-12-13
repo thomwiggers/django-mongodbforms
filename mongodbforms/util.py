@@ -18,7 +18,7 @@ def init_document_options(document):
                       (DocumentMetaWrapper, LazyDocumentMetaWrapper)):
         document._meta = DocumentMetaWrapper(document)
     # Workaround for Django 1.7+
-    document._deferred = False
+    document._deferred = False  # This means we've got all values
 
     def serializable_value(self, field_name):
         # FIXME: Wrong implementation for Relations
