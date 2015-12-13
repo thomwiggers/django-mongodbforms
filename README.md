@@ -67,7 +67,7 @@ form = MessageForm(parent_document=some_document, position=3, ...)
 
 ## Documentation
 
-In theory the documentation [Django's modelform](https://docs.djangoproject.com/en/dev/topics/forms/modelforms/) documentation should be all you need (except for one exception; read on). If you find a discrepancy between something that mongodbforms does and what Django's documentation says, you have most likely found a bug. Please [report it](https://github.com/jschrewe/django-mongodbforms/issues).
+In theory the documentation [Django's modelform](https://docs.djangoproject.com/en/dev/topics/forms/modelforms/) documentation should be all you need (except for one exception; read on). If you find a discrepancy between something that mongodbforms does and what Django's documentation says, you have most likely found a bug. Please [report it](https://github.com/thomwiggers/django-mongoengine-forms/issues).
 
 ### Form field generation
 
