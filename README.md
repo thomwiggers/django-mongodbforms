@@ -1,10 +1,8 @@
 # django mongodbforms
 
-This is an implementation of django's model forms for mongoengine documents.
-This a fork of [Jan Schrewe's
-mongodbforms](https://github.com/jschrewe/django-mongodbforms), which had some
-issues with keeping stuff up to date and it also carried around the baggage of
-supporting ancient Django versions. This fork aims to get a much leaner version.
+This is an implementation of Django's model forms for mongoengine documents.
+
+This a fork of [Jan Schrewe's mongodbforms](https://github.com/jschrewe/django-mongodbforms), which had some issues with keeping stuff up to date and it also carried around the baggage of supporting ancient Django versions. This fork aims to get a much leaner version.
 
 ## Requirements
 
