@@ -1,4 +1,4 @@
-# django mongodbforms
+# Django mongoengine forms
 
 This is an implementation of Django's model forms for mongoengine documents.
 
@@ -7,7 +7,9 @@ This a fork of [Jan Schrewe's mongodbforms](https://github.com/jschrewe/django-m
 ## Requirements
 
   * Django >= 1.9
-  * [mongoengine](http://mongoengine.org/) >= 0.8.3
+  * [mongoengine](http://mongoengine.org/) >= 0.10.0
+
+Earlier versions may work, but we're currently not testing with those.
 
 ## Supported field types
 
