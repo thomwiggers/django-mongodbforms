@@ -10,6 +10,4 @@ build/*
 .settings/*
 *.tmproj
 .tm_properties
-
-
-
+README.rst
