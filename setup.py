@@ -7,10 +7,11 @@ from subprocess import call
 def convert_readme():
     try:
         call(["pandoc", "-f", "markdown_github", "-t",
-              "rst", "-o",  "README.txt", "readme.md"])
+              "rst", "-o",  "README.rst", "README.md"])
     except OSError:
-        pass
-    return open('README.txt').read()
+        return open('README.md').read()
+
+    return open('README.rst').read()
 
 setup(
     name='django-mongoengine-forms',
