@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
+from subprocess import check_call, CalledProcessError
+
 from setuptools import setup
-from subprocess import check_call
 
 
 def convert_readme():
     try:
         check_call(["pandoc", "-f", "markdown_github", "-t",
-              "rst", "-o",  "README.rst", "README.md"])
-    except OSError:
+                    "rst", "-o", "README.rst", "README.md"])
+    except (OSError, CalledProcessError):
         return open('README.md').read()
 
     return open('README.rst').read()
