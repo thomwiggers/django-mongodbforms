@@ -253,7 +253,7 @@ def fields_for_document(document, fields=None, exclude=None, widgets=None,
     if fields:
         field_dict = OrderedDict(
             [(fi, field_dict.get(fi)) for fi in fields
-                if ((not exclude) or (exclude and f not in exclude))]
+                if ((not exclude) or (exclude and fi not in exclude))]
         )
 
     return field_dict
