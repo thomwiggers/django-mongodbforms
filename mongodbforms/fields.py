@@ -200,7 +200,9 @@ class ListField(forms.Field):
 
         if isinstance(contained_widget, type):
             contained_widget = contained_widget()
-        self.widget = self.widget(contained_widget)
+
+        if isinstance(self.widget, type):
+            self.widget = self.widget(contained_widget)
 
         super(ListField, self).__init__(*args, **kwargs)
 
@@ -289,7 +291,9 @@ class MapField(forms.Field):
 
         if isinstance(contained_widget, type):
             contained_widget = contained_widget()
-        self.widget = self.widget(contained_widget)
+
+        if isinstance(self.widget, type):
+            self.widget = self.widget(contained_widget)
 
         super(MapField, self).__init__(*args, **kwargs)
 
