@@ -350,7 +350,7 @@ class BaseDocumentForm(BaseForm):
             if opts.document is None:
                 raise ValueError('A document class must be provided.')
             # if we didn't get an instance, instantiate a new one
-            self.instance = opts.document
+            self.instance = opts.document()
             object_data = {}
         else:
             self.instance = instance
