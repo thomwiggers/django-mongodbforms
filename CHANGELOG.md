@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 0.4.2
+-------------
+
+* Bug: Can't customise widget. (PR #6)
+* Bug: `BaseDocumentForm` should instantiate new document if `instance=None` (PR #7)
+
 Version 0.4.1
 -------------
 
