@@ -938,11 +938,11 @@ def _get_embedded_field(parent_doc, document, emb_name=None, can_fail=False):
     else:
         emb_fields = [
             f for f in parent_doc._fields.values()
-            if (isinstance(field, EmbeddedDocumentField) and
-                field.document_type == document) or
-               (isinstance(field, ListField) and
-                isinstance(field.field, EmbeddedDocumentField) and
-                field.field.document_type == document)
+            if (isinstance(f, EmbeddedDocumentField) and
+                f.document_type == document) or
+               (isinstance(f, ListField) and
+                isinstance(f.field, EmbeddedDocumentField) and
+                f.field.document_type == document)
         ]
         if len(emb_fields) == 1:
             field = emb_fields[0]
