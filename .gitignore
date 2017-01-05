@@ -11,3 +11,4 @@ build/*
 *.tmproj
 .tm_properties
 README.rst
+.ropeproject/
