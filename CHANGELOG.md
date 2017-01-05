@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 0.4.3
+-------------
+
+* Bug: fix 'Field assigned before declaration' error (PR #8)
+* Fix MongoEngine 0.11.0 compatibility by importing errors from `mongoengine.errors` (#9)
+
 Version 0.4.2
 -------------
 

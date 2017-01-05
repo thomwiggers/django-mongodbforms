@@ -15,8 +15,9 @@ from django.utils.text import capfirst, get_valid_filename
 
 from mongoengine.fields import (ObjectIdField, ListField, ReferenceField,
                                 FileField, MapField, EmbeddedDocumentField)
-from mongoengine.base import (ValidationError,
-                              NON_FIELD_ERRORS as MONGO_NON_FIELD_ERRORS)
+from mongoengine.errors import ValidationError
+from mongoengine.base.document import (NON_FIELD_ERRORS as
+                                       MONGO_NON_FIELD_ERRORS)
 from mongoengine.queryset import OperationError, Q
 from mongoengine.queryset.base import BaseQuerySet
 from mongoengine.connection import get_db, DEFAULT_CONNECTION_NAME
