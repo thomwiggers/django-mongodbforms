@@ -10,4 +10,3 @@ class SimpleDocumentTest(unittest.TestCase):
 
     def test_document(self):
         MyDocument()
-
