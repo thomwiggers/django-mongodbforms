@@ -18,7 +18,7 @@ class MyForm(DocumentForm):
 class SimpleDocumentTest(unittest.TestCase):
 
     @classmethod
-    def setUpTestCase(cls):
+    def setUpClass(cls):
         settings.configure()
 
     def test_form(self):
