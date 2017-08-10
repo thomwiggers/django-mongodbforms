@@ -17,3 +17,4 @@ class MoreComplexRecursiveDocument(unittest.TestCase):
     def test_import(self):
         connect('test', host='mongomock://test')
         from .fixtures.recursive_definition import UserForm
+        UserForm()
