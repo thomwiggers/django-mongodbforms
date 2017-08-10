@@ -10,3 +10,10 @@ class SimpleDocumentTest(unittest.TestCase):
 
     def test_document(self):
         MyDocument()
+
+
+class MoreComplexRecursiveDocument(unittest.TestCase):
+
+    def test_import(self):
+        from .fixtures.recursive_definition import UserForm
+        UserForm()
