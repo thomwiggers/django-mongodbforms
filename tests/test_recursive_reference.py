@@ -1,4 +1,4 @@
-from mongoengine import Document, fields
+from mongoengine import Document, fields, connect
 import unittest
 
 
@@ -15,5 +15,5 @@ class SimpleDocumentTest(unittest.TestCase):
 class MoreComplexRecursiveDocument(unittest.TestCase):
 
     def test_import(self):
+        connect('test', host='mongomock://test')
         from .fixtures.recursive_definition import UserForm
-        UserForm()

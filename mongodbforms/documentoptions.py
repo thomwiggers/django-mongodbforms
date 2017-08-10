@@ -72,15 +72,20 @@ class LazyDocumentMetaWrapper(LazyObject):
         super(LazyDocumentMetaWrapper, self).__init__()
 
     def _setup(self):
-        self._wrapped = DocumentMetaWrapper(self._document, self._meta)
+        self.__dict__['_wrapped'] = DocumentMetaWrapper(
+            self._document, self._meta)
 
     def __setattr__(self, name, value):
-        if name in ["_document", "_meta", ]:
-            object.__setattr__(self, name, value)
+        if name in ["_document", "_meta"]:
+            self.__dict__[name] = value
         else:
             super(LazyDocumentMetaWrapper, self).__setattr__(name, value)
 
     __len__ = new_method_proxy(len)
+
+    @property
+    def __class__(self):
+        return type(self)
 
     @new_method_proxy
     def __contains__(self, key):

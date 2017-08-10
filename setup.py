@@ -39,5 +39,6 @@ setup(
     url='https://github.com/thomwiggers/django-mongoengine-forms/',
     zip_safe=False,
     install_requires=['setuptools', 'django>=1.8', 'mongoengine>=0.10.0'],
+    tests_require=['mongomock'],
     test_suite="tests",
 )
