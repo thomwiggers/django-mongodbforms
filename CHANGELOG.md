@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 0.4.4
+-------------
+* Try to fix a max recursion depth issue (#10)
+
 Version 0.4.3
 -------------
 
