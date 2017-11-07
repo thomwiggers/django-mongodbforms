@@ -634,7 +634,7 @@ class EmbeddedDocumentForm(with_metaclass(DocumentFormMetaclass,
                     self.parent_document.update(**{
                         "push__" + self._meta.embedded_field: self.instance
                     })
-                except:
+                except Exception:
                     raise OperationError("The %s could not be appended." %
                                          self.instance.__class__.__name__)
             elif isinstance(field, ListField) and self.position is not None:
@@ -644,7 +644,7 @@ class EmbeddedDocumentForm(with_metaclass(DocumentFormMetaclass,
                         "__".join(("set", self._meta.embedded_field,
                                    str(self.position))): self.instance
                     })
-                except:
+                except Exception:
                     raise OperationError("The %s could not be updated at "
                                          "position %d." %
                                          (self.instance.__class__.__name__,
