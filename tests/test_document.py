@@ -1,4 +1,3 @@
-from django.conf import settings
 from mongoengine import Document, fields
 from mongodbforms import DocumentForm
 import unittest
@@ -16,10 +15,6 @@ class MyForm(DocumentForm):
 
 
 class SimpleDocumentTest(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        settings.configure()
 
     def test_form(self):
         form = MyForm()

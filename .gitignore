@@ -12,3 +12,4 @@ build/*
 .tm_properties
 README.rst
 .ropeproject/
+.tox/

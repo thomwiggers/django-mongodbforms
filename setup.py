@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
+import sys
 from subprocess import check_call, CalledProcessError
 
 from setuptools import setup
 
-import six
-
 
 requirements = ['setuptools', 'mongoengine>=0.10.0']
-if six.PY3:
+
+if sys.version_info >= (3, 5):
     requirements.append('django')
 else:
     requirements.append('django<2')
