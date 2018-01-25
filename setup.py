@@ -4,6 +4,15 @@ from subprocess import check_call, CalledProcessError
 
 from setuptools import setup
 
+import six
+
+
+requirements = ['setuptools', 'mongoengine>=0.10.0']
+if six.PY3:
+    requirements.append('django')
+else:
+    requirements.append('django<2')
+
 
 def convert_readme():
     try:
@@ -38,7 +47,7 @@ setup(
     obsoletes=['mongodbforms'],
     url='https://github.com/thomwiggers/django-mongoengine-forms/',
     zip_safe=False,
-    install_requires=['setuptools', 'django>=1.8', 'mongoengine>=0.10.0'],
+    install_requires=requirements,
     tests_require=['mongomock'],
     test_suite="tests.suite",
 )
