@@ -28,7 +28,16 @@ from .documentoptions import DocumentMetaWrapper
 from .util import with_metaclass, load_field_generator
 
 
-_fieldgenerator = load_field_generator()
+_fieldgenerator = None
+
+
+def _load_and_cache_field_generator():
+    global _fieldgenerator
+
+    if _fieldgenerator is None:
+        _fieldgenerator = load_field_generator()
+
+    return _fieldgenerator
 
 
 def _get_unique_filename(name, db_alias=DEFAULT_CONNECTION_NAME,
@@ -210,8 +219,7 @@ def document_to_dict(instance, fields=None, exclude=None):
 
 
 def fields_for_document(document, fields=None, exclude=None, widgets=None,
-                        formfield_callback=None,
-                        field_generator=_fieldgenerator):
+                        formfield_callback=None, field_generator=None):
     """
     Returns a ``SortedDict`` containing form fields for the given model.
 
@@ -222,6 +230,9 @@ def fields_for_document(document, fields=None, exclude=None, widgets=None,
     fields will be excluded from the returned fields, even if they are listed
     in the ``fields`` argument.
     """
+    if field_generator is None:
+        field_generator = _load_and_cache_field_generator()
+
     field_list = []
     if isinstance(field_generator, type):
         field_generator = field_generator()
@@ -278,8 +289,8 @@ class ModelFormOptions(object):
         self.exclude = getattr(options, 'exclude', None)
         self.widgets = getattr(options, 'widgets', None)
         self.embedded_field = getattr(options, 'embedded_field_name', None)
-        self.formfield_generator = getattr(options, 'formfield_generator',
-                                           _fieldgenerator)
+        self.formfield_generator = getattr(
+            options, 'formfield_generator', _load_and_cache_field_generator())
 
         self._dont_save = []
 
@@ -313,7 +324,7 @@ class DocumentFormMetaclass(DeclarativeFieldsMetaclass):
         if opts.document:
             formfield_generator = getattr(opts,
                                           'formfield_generator',
-                                          _fieldgenerator)
+                                          _load_and_cache_field_generator())
 
             # If a model is defined, extract form fields from it.
             fields = fields_for_document(opts.document, opts.fields,
