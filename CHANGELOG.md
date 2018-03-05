@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Version 0.4.5
+-------------
+* Lazy load field generator in documents package (PR #14)
+* Cover bare excepts
+* Fix tests on Python 3
+* Limit to Django<2 if installing on Python >=3.5
+
 Version 0.4.4
 -------------
 * Try to fix a max recursion depth issue (#10)
