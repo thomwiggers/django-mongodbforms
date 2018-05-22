@@ -1,8 +1,8 @@
 import copy
 
-from django.forms.widgets import (Widget, Media, TextInput,
-                                  SplitDateTimeWidget, DateInput, TimeInput,
-                                  MultiWidget, HiddenInput)
+from django.forms.widgets import (DateInput, HiddenInput, Media, MultiWidget,
+                                  Select, SelectMultiple, SplitDateTimeWidget,
+                                  TextInput, TimeInput, Widget)
 from django.utils.safestring import mark_safe
 from django.core.validators import EMPTY_VALUES
 from django.forms.utils import flatatt
@@ -177,3 +177,14 @@ class HiddenMapWidget(MapWidget):
         data_widget = HiddenInput()
         super(MapWidget, self).__init__(data_widget, attrs)
         self.key_widget = HiddenInput()
+
+
+class LazySelect(Select):
+    def __init__(self, attrs=None, choices=()):
+        # skip choice initialization in widgets.ChoiceWidget.__init__
+        Widget.__init__(self, attrs)
+        self.choices = choices
+
+
+class LazySelectMultiple(LazySelect, SelectMultiple):
+    pass

@@ -304,7 +304,7 @@ class MongoFormFieldGenerator(object):
             'label': self.get_field_label(field),
             'help_text': self.get_field_help_text(field),
             'required': field.required,
-            'queryset': field.document_type.objects.clone(),
+            'queryset': lambda: field.document_type.objects.clone(),
         }
         form_class = self.form_field_map.get(map_key)
         defaults.update(self.check_widget(map_key))
@@ -331,7 +331,7 @@ class MongoFormFieldGenerator(object):
         elif isinstance(field.field, MongoReferenceField):
             map_key = 'listfield_references'
             defaults.update({
-                'queryset': field.field.document_type.objects.clone(),
+                'queryset': lambda: field.field.document_type.objects.clone(),
             })
         else:
             map_key = 'listfield'

@@ -18,24 +18,26 @@ from django.forms.utils import ErrorList
 from django.core.exceptions import ValidationError
 
 from bson.errors import InvalidId
+from mongoengine.queryset.base import BaseQuerySet
+from mongoengine.errors import ValidationError as MongoValidationError
 
-from .widgets import ListWidget, MapWidget, HiddenMapWidget
+from .widgets import (HiddenMapWidget, LazySelect, LazySelectMultiple,
+                      ListWidget, MapWidget)
 
 
 class MongoChoiceIterator(object):
     def __init__(self, field):
         self.field = field
-        self.queryset = field.queryset
 
     def __iter__(self):
         if self.field.empty_label is not None:
             yield ("", self.field.empty_label)
 
-        for obj in self.queryset.all():
+        for obj in self.field.queryset.all():
             yield self.choice(obj)
 
     def __len__(self):
-        return len(self.queryset)
+        return len(self.field.queryset)
 
     def choice(self, obj):
         return (self.field.prepare_value(obj),
@@ -76,28 +78,29 @@ class ReferenceField(forms.ChoiceField):
     Reference field for mongo forms. Inspired by
     `django.forms.models.ModelChoiceField`.
     """
+    widget = LazySelect
+
     def __init__(self, queryset, empty_label="---------", *args, **kwargs):
+        # skip choice initialization in forms.ChoiceField.__init__
         forms.Field.__init__(self, *args, **kwargs)
         self.empty_label = empty_label
-        self.queryset = queryset
 
-    def _get_queryset(self):
-        return self._queryset.clone()
+        if isinstance(queryset, BaseQuerySet):
+            self._queryset_factory = lambda: queryset
+        else:
+            self._queryset_factory = queryset
 
-    def _set_queryset(self, queryset):
-        self._queryset = queryset
-        self.widget.choices = self.choices
-    queryset = property(_get_queryset, _set_queryset)
+        self._choices = self.widget.choices = MongoChoiceIterator(self)
+
+    @property
+    def queryset(self):
+        return self._queryset_factory()
 
     def prepare_value(self, value):
         if hasattr(value, '_meta'):
             return value.pk
 
         return super(ReferenceField, self).prepare_value(value)
-
-    def _get_choices(self):
-        return MongoChoiceIterator(self)
-    choices = property(_get_choices, forms.ChoiceField._set_choices)
 
     def label_from_instance(self, obj):
         """
@@ -116,26 +119,31 @@ class ReferenceField(forms.ChoiceField):
             else:
                 return None
 
-        oid = super(ReferenceField, self).clean(value)
+        return self.queryset.get(pk=super(ReferenceField, self).clean(value))
 
+    def valid_value(self, value):
+        qs = self.queryset
         try:
-            obj = self.queryset.get(pk=oid)
-        except (TypeError, InvalidId, self.queryset._document.DoesNotExist):
-            raise forms.ValidationError(
-                self.error_messages['invalid_choice'] % {'value': value}
-            )
-        return obj
+            qs.get(pk=value)
+        except (TypeError,
+                InvalidId,
+                MongoValidationError,
+                qs._document.DoesNotExist):
+
+            return False
+
+        return True
 
     def __deepcopy__(self, memo):
         result = super(forms.ChoiceField, self).__deepcopy__(memo)
-        result.queryset = self.queryset  # self.queryset calls clone()
+        result._queryset_factory = self._queryset_factory
         result.empty_label = copy.deepcopy(self.empty_label)
         return result
 
 
 class DocumentMultipleChoiceField(ReferenceField):
     """A MultipleChoiceField whose choices are a model QuerySet."""
-    widget = forms.SelectMultiple
+    widget = LazySelectMultiple
     hidden_widget = forms.MultipleHiddenInput
     default_error_messages = {
         'list': _('Enter a list of values.'),
