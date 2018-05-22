@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 0.4.6
+-------------
+* Hold a lazy queryset reference to prevent early database access (PR #15 by @terencehonles)
+
 Version 0.4.5
 -------------
 * Lazy load field generator in documents package (PR #14)
