@@ -94,6 +94,17 @@ class MongoFormFieldGenerator(object):
         raise NotImplementedError('%s is not supported by MongoForm' %
                                   field.__class__.__name__)
 
+    def get_choices(self, field, widget=None):
+        choices = getattr(widget, 'choices', None)
+
+        # choices are processed differently than standard django forms.
+        # this check ensures that any non default (non None or () choices)
+        # are respected
+        if choices:
+            return choices
+        else:
+            return self.get_field_choices(field)
+
     def get_field_choices(self, field, include_blank=True,
                           blank_choice=BLANK_CHOICE_DASH):
         first_choice = include_blank and blank_choice or []
@@ -157,7 +168,7 @@ class MongoFormFieldGenerator(object):
         if field.choices:
             map_key = 'stringfield_choices'
             defaults.update({
-                'choices': self.get_field_choices(field),
+                'choices': self.get_choices(field, kwargs.get('widget')),
                 'coerce': self.string_field,
             })
         elif field.max_length is None:
@@ -221,7 +232,7 @@ class MongoFormFieldGenerator(object):
             defaults.update({
                 'coerce': self.integer_field,
                 'empty_value': None,
-                'choices': self.get_field_choices(field),
+                'choices': self.get_choices(field, kwargs.get('widget')),
             })
         else:
             map_key = 'intfield'
@@ -277,7 +288,7 @@ class MongoFormFieldGenerator(object):
             defaults.update({
                 'coerce': self.boolean_field,
                 'empty_value': None,
-                'choices': self.get_field_choices(field),
+                'choices': self.get_choices(field, kwargs.get('widget')),
             })
         else:
             map_key = 'booleanfield'
@@ -325,7 +336,8 @@ class MongoFormFieldGenerator(object):
         if field.field.choices:
             map_key = 'listfield_choices'
             defaults.update({
-                'choices': field.field.choices,
+                'choices': self.get_choices(
+                    field.field, kwargs.get('widget')),
                 'widget': forms.CheckboxSelectMultiple
             })
         elif isinstance(field.field, MongoReferenceField):
