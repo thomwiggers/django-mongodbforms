@@ -80,9 +80,14 @@ class ReferenceField(forms.ChoiceField):
     """
     widget = LazySelect
 
-    def __init__(self, queryset, empty_label="---------", *args, **kwargs):
+    def __init__(
+            self,
+            queryset,
+            empty_label="---------",
+            label_formatter=smart_unicode,
+            **kwargs):
         # skip choice initialization in forms.ChoiceField.__init__
-        forms.Field.__init__(self, *args, **kwargs)
+        forms.Field.__init__(self, **kwargs)
         self.empty_label = empty_label
 
         if isinstance(queryset, BaseQuerySet):
@@ -90,6 +95,7 @@ class ReferenceField(forms.ChoiceField):
         else:
             self._queryset_factory = queryset
 
+        self._label_formatter = label_formatter
         self._choices = self.widget.choices = MongoChoiceIterator(self)
 
     @property
@@ -109,7 +115,7 @@ class ReferenceField(forms.ChoiceField):
         Subclasses can override this method to customize the display of
         the choices.
         """
-        return smart_unicode(obj)
+        return self._label_formatter(obj)
 
     def clean(self, value):
         # Check for empty values.
