@@ -1,3 +1,7 @@
+# Maintainer wanted
+
+I don't use this package anymore, so if anyone wants to take over, contact me.
+
 # Django mongoengine forms
 
 This is an implementation of Django's model forms for mongoengine documents.
