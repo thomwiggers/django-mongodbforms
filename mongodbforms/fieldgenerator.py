@@ -4,8 +4,6 @@
 Based on django mongotools (https://github.com/wpjunior/django-mongotools) by
 Wilson Júnior (wilsonpjunior@gmail.com).
 """
-import collections
-
 from django import forms
 from django.core.validators import EMPTY_VALUES, RegexValidator
 from django.utils.encoding import smart_text as smart_unicode
@@ -22,6 +20,11 @@ from .widgets import Html5SplitDateTimeWidget
 from .documentoptions import create_verbose_name
 
 BLANK_CHOICE_DASH = [("", "---------")]
+
+try:
+    from collections.abc import Callable
+except ImportError:
+    from collections import Callable
 
 
 class MongoFormFieldGenerator(object):
@@ -144,7 +147,7 @@ class MongoFormFieldGenerator(object):
         else:
             f = field
         d = {}
-        if isinstance(f.default, collections.Callable):
+        if isinstance(f.default, Callable):
             d['initial'] = field.default()
             d['show_hidden_initial'] = True
             return f.default()

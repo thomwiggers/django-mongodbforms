@@ -1,6 +1,7 @@
 import os
 import itertools
-from collections import Callable, OrderedDict
+
+from collections import OrderedDict
 from functools import reduce
 
 from django.forms.forms import (BaseForm, DeclarativeFieldsMetaclass,
@@ -26,6 +27,11 @@ from gridfs import GridFS
 
 from .documentoptions import DocumentMetaWrapper
 from .util import with_metaclass, load_field_generator
+
+try:
+    from collections.abc import Callable
+except ImportError:
+    from collections import Callable
 
 
 _fieldgenerator = None
