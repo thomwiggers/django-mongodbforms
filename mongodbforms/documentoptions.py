@@ -1,13 +1,18 @@
 import sys
-from collections import MutableMapping
-from types import MethodType
 import warnings
+
+from types import MethodType
 
 from django.db.models.fields import FieldDoesNotExist
 from django.utils.functional import LazyObject, new_method_proxy
 from django.utils.text import capfirst, camel_case_to_spaces
 from django.conf import settings
 from mongoengine.fields import ReferenceField, ListField
+
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
 
 
 def patch_document(function, instance, bound=True):
